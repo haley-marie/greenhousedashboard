@@ -1,0 +1,47 @@
+# ---------------------
+# OS/Editor Junk
+# ---------------------
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.swn
+*~
+# ---------------------
+# Go Build Artifacts
+# ---------------------
+bin/
+*.exe
+*.out
+*.test
+# ---------------------
+# SQLite Databases
+# ---------------------
+*.db
+*.sqlite
+*.sqlite3
+# ---------------------
+# Go Dependencies
+# ---------------------
+/vendor/
+# ---------------------
+# Rust/Tauri Build Output
+# ---------------------
+tauri/target
+tauri/node_modules/
+# ---------------------
+# Frontend Build Artifacts
+# ---------------------
+dist/
+build/
+# ---------------------
+# Logs
+# ---------------------
+*.log
+# ---------------------
+# Environment/Secrets
+# ---------------------
+.env
+.env.*
+
+
