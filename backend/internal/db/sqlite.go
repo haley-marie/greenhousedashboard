@@ -19,7 +19,7 @@ func OpenDatabase(path string) (*sql.DB, error) {
 		return nil, err
 	}
 
-	_, err = db.Exec("PRAGMA busy_timeout = 5000")
+	_, err = db.Exec("PRAGMA busy_timeout = 5000;")
 	if err != nil {
 		_ = db.Close()
 		return nil, err
