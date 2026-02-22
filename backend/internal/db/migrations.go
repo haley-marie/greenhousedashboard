@@ -11,13 +11,15 @@ type Migration struct {
 	down    func(*sql.Tx) error
 }
 
-var allMigrations = []Migration{}
+var allMigrations = []Migration{
+	migration001,
+}
 
 const createTableMigrations = `
 CREATE TABLE IF NOT EXISTS migrations (
 	version INTEGER PRIMARY KEY,
-	applied_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%ML%fZ', 'now')
-);
+	applied_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+)
 `
 
 func ensureMigrationsTable(db *sql.DB) error {
@@ -26,7 +28,7 @@ func ensureMigrationsTable(db *sql.DB) error {
 }
 
 func getAppliedVersions(db *sql.DB) ([]int, error) {
-	rawRows, err := db.Query("SELECT version FROM migrations ORDER BY ASC")
+	rawRows, err := db.Query("SELECT version FROM migrations ORDER BY version ASC")
 	if err != nil {
 		return nil, err
 	}
