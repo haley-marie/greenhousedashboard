@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"errors"
+	"time"
 
 	"github.com/haley-marie/greenhousedashboard/backend/models"
 )
@@ -54,4 +55,38 @@ func (r *PlantRepository) AddPlant(p *models.Plant) (*models.Plant, error) {
 	}
 
 	return p, nil
+}
+
+func (r *PlantRepository) ListPlants() ([]models.Plant, error) {
+	rows, err := r.db.Query("SELECT * FROM plants")
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var plants []models.Plant
+
+	for rows.Next() {
+		var p models.Plant
+
+		err = rows.Scan(
+			&p.ID,
+			&p.Species,
+			&p.Nickname,
+			&p.Variety,
+			&p.CreatedAt,
+			&p.UpdatedAt,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		plants = append(plants, p)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return plants, nil
 }

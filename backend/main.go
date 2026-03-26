@@ -3,7 +3,7 @@ package main
 import (
 	"log"
 
-	"github.com/haley-marie/greenhousedashboard/backend/internal/db"
+	"github.com/haley-marie/greenhousedashboard/backend/db"
 )
 
 func main() {
