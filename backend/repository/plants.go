@@ -3,7 +3,6 @@ package repository
 import (
 	"database/sql"
 	"errors"
-	"time"
 
 	"github.com/haley-marie/greenhousedashboard/backend/models"
 )
@@ -11,6 +10,8 @@ import (
 type PlantRepository struct {
 	db *sql.DB
 }
+
+var ErrNotFound = errors.New("not found")
 
 func (r *PlantRepository) AddPlant(p *models.Plant) (*models.Plant, error) {
 	if p.Species == "" {
@@ -49,7 +50,7 @@ func (r *PlantRepository) AddPlant(p *models.Plant) (*models.Plant, error) {
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return nil, errors.New("plant not found in database")
+			return nil, ErrNotFound
 		}
 		return nil, err
 	}
@@ -89,4 +90,32 @@ func (r *PlantRepository) ListPlants() ([]models.Plant, error) {
 	}
 
 	return plants, nil
+}
+
+func (r *PlantRepository) GetPlantByID(id int) (*models.Plant, error) {
+	row := r.db.QueryRow(`
+	SELECT id, species, nickname, variety, created_at, updated_at 
+	FROM plants
+	WHERE id = ?
+	`, id)
+
+	p := &models.Plant{}
+
+	err := row.Scan(
+		&p.ID,
+		&p.Species,
+		&p.Nickname,
+		&p.Variety,
+		&p.CreatedAt,
+		&p.UpdatedAt,
+	)
+
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, ErrNotFound
+		}
+		return nil, err
+	}
+
+	return p, nil
 }
