@@ -150,13 +150,16 @@ func (r *PlantRepository) GetPlantByID(id int) (*models.Plant, error) {
 
 	p := &models.Plant{}
 
+	var nickname, variety sql.NullString
+	var createdAtStr, updatedAtStr string
+
 	err := row.Scan(
 		&p.ID,
 		&p.Species,
-		&p.Nickname,
-		&p.Variety,
-		&p.CreatedAt,
-		&p.UpdatedAt,
+		&nickname,
+		&variety,
+		&createdAtStr,
+		&updatedAtStr,
 	)
 
 	if err != nil {
@@ -165,6 +168,21 @@ func (r *PlantRepository) GetPlantByID(id int) (*models.Plant, error) {
 		}
 		return nil, err
 	}
+
+	createdAt, err := parseTime(createdAtStr)
+	if err != nil {
+		return nil, err
+	}
+
+	updatedAt, err := parseTime(updatedAtStr)
+	if err != nil {
+		return nil, err
+	}
+
+	p.CreatedAt = createdAt
+	p.UpdatedAt = updatedAt
+	p.Nickname = convertIfValidStr(nickname)
+	p.Variety = convertIfValidStr(variety)
 
 	return p, nil
 }
