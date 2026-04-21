@@ -186,3 +186,28 @@ func (r *PlantRepository) GetPlantByID(id int) (*models.Plant, error) {
 
 	return p, nil
 }
+
+func (r *PlantRepository) DeletePlantByID(id int) error {
+	sqlStatement := `
+		DELETE * FROM plants WHERE id = ?
+		`
+
+	result, err := r.DB.Exec(
+		sqlStatement,
+		id,
+	)
+	if err != nil {
+		return err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if rowsAffected == 0 {
+		return ErrNotFound
+	}
+
+	return nil
+}
