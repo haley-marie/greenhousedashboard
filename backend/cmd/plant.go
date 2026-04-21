@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	"github.com/haley-marie/greenhousedashboard/backend/models"
 	"github.com/haley-marie/greenhousedashboard/backend/repository"
@@ -10,7 +11,7 @@ import (
 
 func HandleAddPlant(repo *repository.PlantRepository) {
 	if len(os.Args) < 3 {
-		fmt.Println("usage: gh add-plant <species> [nickname] [variety]")
+		fmt.Println("usage: greenhouse add-plant <species> [nickname] [variety]")
 		return
 	}
 
@@ -55,13 +56,49 @@ func HandleListPlants(repo *repository.PlantRepository) {
 	}
 
 	for _, plant := range plants {
-		if plant.Nickname != "" && plant.Variety != "" {
+		switch {
+		case plant.Nickname != "" && plant.Variety != "":
 			fmt.Printf("ID: %d | %s (%s - %s)\n", plant.ID, plant.Nickname, plant.Species, plant.Variety)
-		} else if plant.Nickname != "" {
+
+		case plant.Nickname != "":
 			fmt.Printf("ID: %d | %s (%s)\n", plant.ID, plant.Nickname, plant.Species)
-		} else {
+
+		default:
 			fmt.Printf("ID: %d | %s\n", plant.ID, plant.Species)
 		}
+	}
+}
 
+func HandleGetPlantByID(repo *repository.PlantRepository) {
+	if len(os.Args) < 3 {
+		fmt.Println("usage: greenhouse get-plant <id>")
+		return
+	}
+
+	id, err := strconv.Atoi(os.Args[2])
+	if err != nil {
+		fmt.Println("error:", err)
+		return
+	}
+
+	p, err := repo.GetPlantByID(id)
+	if err != nil {
+		if err == repository.ErrNotFound {
+			fmt.Println("plant not found")
+		} else {
+			fmt.Println("error:", err)
+		}
+		return
+	}
+
+	switch {
+	case p.Nickname != "" && p.Variety != "":
+		fmt.Printf("ID: %d | %s (%s - %s)\n", p.ID, p.Nickname, p.Species, p.Variety)
+
+	case p.Nickname != "":
+		fmt.Printf("ID: %d | %s (%s)\n", p.ID, p.Nickname, p.Species)
+
+	default:
+		fmt.Printf("ID: %d | %s\n", p.ID, p.Species)
 	}
 }

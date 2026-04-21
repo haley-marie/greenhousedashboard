@@ -35,5 +35,7 @@ func main() {
 		cmd.HandleAddPlant(&repo)
 	case "list-plants":
 		cmd.HandleListPlants(&repo)
+	case "get-plant":
+		cmd.HandleGetPlantByID(&repo)
 	}
 }
