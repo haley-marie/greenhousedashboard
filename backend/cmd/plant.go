@@ -102,3 +102,28 @@ func HandleGetPlantByID(repo *repository.PlantRepository) {
 		fmt.Printf("ID: %d | %s\n", p.ID, p.Species)
 	}
 }
+
+func HandleDeletePlantByID(repo *repository.PlantRepository) {
+	if len(os.Args) < 3 {
+		fmt.Println("usage: greenhouse delete-plant <id>")
+		return
+	}
+
+	id, err := strconv.Atoi(os.Args[2])
+	if err != nil {
+		fmt.Println("error:", err)
+		return
+	}
+
+	err = repo.DeletePlantByID(id)
+	if err != nil {
+		if err == repository.ErrNotFound {
+			fmt.Println("plant not found")
+		} else {
+			fmt.Println("error:", err)
+		}
+		return
+	}
+
+	fmt.Printf("deleted plant %d\n", id)
+}

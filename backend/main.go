@@ -37,5 +37,7 @@ func main() {
 		cmd.HandleListPlants(&repo)
 	case "get-plant":
 		cmd.HandleGetPlantByID(&repo)
+	case "delete-plant":
+		cmd.HandleDeletePlantByID(&repo)
 	}
 }

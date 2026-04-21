@@ -189,7 +189,7 @@ func (r *PlantRepository) GetPlantByID(id int) (*models.Plant, error) {
 
 func (r *PlantRepository) DeletePlantByID(id int) error {
 	sqlStatement := `
-		DELETE * FROM plants WHERE id = ?
+		DELETE FROM plants WHERE id = ?
 		`
 
 	result, err := r.DB.Exec(
