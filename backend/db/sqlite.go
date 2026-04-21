@@ -2,7 +2,6 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
 
 	_ "github.com/ncruces/go-sqlite3/driver"
 	_ "github.com/ncruces/go-sqlite3/embed"
@@ -19,7 +18,6 @@ func OpenDatabase(path string) (*sql.DB, error) {
 	row := db.QueryRow("PRAGMA foreign_keys;")
 	var fk int
 	row.Scan(&fk)
-	fmt.Println("foreign_keys:", fk)
 
 	_, err = db.Exec("PRAGMA foreign_keys = ON")
 	if err != nil {

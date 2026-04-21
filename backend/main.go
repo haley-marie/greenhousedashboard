@@ -36,6 +36,4 @@ func main() {
 	case "list-plants":
 		cmd.HandleListPlants(&repo)
 	}
-
-	log.Println("migrations complete")
 }
