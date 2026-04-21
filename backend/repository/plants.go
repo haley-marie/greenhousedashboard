@@ -8,7 +8,7 @@ import (
 )
 
 type PlantRepository struct {
-	db *sql.DB
+	DB *sql.DB
 }
 
 var ErrNotFound = errors.New("not found")
@@ -23,7 +23,7 @@ func (r *PlantRepository) AddPlant(p *models.Plant) (*models.Plant, error) {
 		VALUES (?, ?, ?)
 		`
 
-	result, err := r.db.Exec(
+	result, err := r.DB.Exec(
 		sqlStatement,
 		p.Species,
 		p.Nickname,
@@ -38,7 +38,7 @@ func (r *PlantRepository) AddPlant(p *models.Plant) (*models.Plant, error) {
 		return nil, err
 	}
 
-	row := r.db.QueryRow("SELECT id, species, nickname, variety, created_at, updated_at FROM plants WHERE id = ?", id)
+	row := r.DB.QueryRow("SELECT id, species, nickname, variety, created_at, updated_at FROM plants WHERE id = ?", id)
 
 	err = row.Scan(
 		&p.ID,
@@ -59,7 +59,7 @@ func (r *PlantRepository) AddPlant(p *models.Plant) (*models.Plant, error) {
 }
 
 func (r *PlantRepository) ListPlants() ([]models.Plant, error) {
-	rows, err := r.db.Query("SELECT * FROM plants")
+	rows, err := r.DB.Query("SELECT * FROM plants")
 	if err != nil {
 		return nil, err
 	}
@@ -93,7 +93,7 @@ func (r *PlantRepository) ListPlants() ([]models.Plant, error) {
 }
 
 func (r *PlantRepository) GetPlantByID(id int) (*models.Plant, error) {
-	row := r.db.QueryRow(`
+	row := r.DB.QueryRow(`
 	SELECT id, species, nickname, variety, created_at, updated_at 
 	FROM plants
 	WHERE id = ?
